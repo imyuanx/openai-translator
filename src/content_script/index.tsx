@@ -40,7 +40,16 @@ async function hidePopupThumb() {
     removeContainer()
 }
 
+async function keydownHandle({ code }: KeyboardEvent) {
+    if (code !== 'Escape') {
+        return
+    }
+    hidePopupCard()
+    hidePopupThumb()
+}
+
 async function hidePopupCard() {
+    document.removeEventListener('keydown', keydownHandle)
     const $popupCard: HTMLDivElement | null = await queryPopupCardElement()
     if (!$popupCard) {
         return
@@ -54,6 +63,7 @@ async function hidePopupCard() {
 }
 
 async function showPopupCard(x: number, y: number, text: string, autoFocus: boolean | undefined = false) {
+    document.addEventListener('keydown', keydownHandle)
     const $popupThumb: HTMLDivElement | null = await queryPopupThumbElement()
     if ($popupThumb) {
         $popupThumb.style.display = 'none'
